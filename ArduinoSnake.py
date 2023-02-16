@@ -3,15 +3,10 @@ import LocoIOT_Communicator as MSG
 import time
 import random
 
-
 # USB Port Address
 usb_str = "COM3"
 
-
-
 def main():
-
-
     # Create Class Instances
     loco_iot = LocoIOT.LocoIOT()
     msg = MSG.IOT_Codes()
@@ -24,7 +19,6 @@ def main():
     loco_iot.enable(msg.SUBTYPE_JOYSTICK)
     # Send Start Flag
     loco_iot.start()
-
     Letters={
     "A":[0,0,126,18,18,126,0,0],
     "B":[0,0,126,74,78,120,0,0],
@@ -63,12 +57,7 @@ def main():
     "8":[0,0,126,74,74,126,0,0],
     "9":[0,0,30,18,18,126,0,0],
     "0":[0,0,126,66,66,126,0,0]
-
-
           }
-
-
-
     outcome="start"
     word="initialize"
     xpos=0
@@ -83,7 +72,6 @@ def main():
     joystick_dict = loco_iot.getData(msg.SUBTYPE_JOYSTICK)
 
     while(loco_iot.getData(msg.SUBTYPE_JOYSTICK)["Button J"]!=0):
-
         xpos=0
         ypos=0
         wordscroll=[]
@@ -96,40 +84,28 @@ def main():
         count=0
         bootybackwards=[]
 
-
         applex=random.randint(0,7)
         appley=random.randint(0,7)
         print(applex)
         print(appley)
         while (outcome!="dead"):
-
-
             joystick_dict = loco_iot.getData(msg.SUBTYPE_JOYSTICK)
             #change the direction you are moving in with the joystick
             print(joystick_dict)
             if(joystick_dict['X Value']>750):
-
                 veloy=-1
                 velox=0
-
             elif(joystick_dict['X Value']<250):
-
                 veloy=1
                 velox=0
-
             if(joystick_dict['Y Value']>750):
-
                 velox=1
                 veloy=0
-
             elif(joystick_dict['Y Value']<250):
-
                 velox=-1
                 veloy=0
-
             xpos=xpos+velox
             ypos=ypos+veloy
-
             #Kill you if you go off of the screen
             if(ypos<0):
                 ypos=7
@@ -155,20 +131,12 @@ def main():
                 if(i!=len(alldots)):
                     live.append(alldots[i-1])
                     print(i)
-
             if(coordinate==[applex,appley]):
                 length=length+1
-
             for i in live:
                 if(i==coordinate and length>2):
                     outcome="dead"
                     break
-
-
-
-
-
-
             print(live)
             print(coordinate)
             for i in range(length):
@@ -181,42 +149,19 @@ def main():
                     changeturn="yes"
                 else:
                     changeturn="no"
-
-
                 fulldata[alldots[len(alldots)+i-length][0]]=fulldata[alldots[len(alldots)+i-length][0]]+2**alldots[len(alldots)+i-length][1]
-
 
             if(coordinate!=[applex,appley]):
                 fulldata[applex]=fulldata[applex]+2**appley
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             #when you eat the apple, makes you long and makes another apple
-
-
             #if you dont eat it, show the apple on the screen
-
-
 
             #set the matrix
             loco_iot.setData(msg.SUBTYPE_LED_MATRIX,fulldata)
-
-
             time.sleep(0.3)
 
-        #Print out the ourcome of the game (dead or won) in scrolling text
+        #Print out the outcome of the game (dead or won) in scrolling text
         word=("Score"+str(length))
         tempword=list(word.upper())
         for i in tempword:
@@ -227,10 +172,8 @@ def main():
             wordscroll.pop(0)
         outcome="restart"
 
-
     # Close USB Connection to Controller
     loco_iot.close()
-
 
 # Run Main Function
 main()
